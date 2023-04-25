@@ -1,0 +1,13 @@
+{
+  "domain": "sensorthings",
+  "name": "OGC SensorThings",
+  "codeowners": ["@ivansanchez"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://gitlab.com/IvanSanchez/homeassistant-sensorthings",
+  "integration_type": "service",
+  "iot_class": "local_push",
+  "issue_tracker": "https://gitlab.com/IvanSanchez/homeassistant-sensorthings/-/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
