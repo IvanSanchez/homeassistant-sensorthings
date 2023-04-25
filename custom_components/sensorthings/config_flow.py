@@ -48,20 +48,19 @@ class SensorThingsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors["base"] = "unknown"
 
         # TODO: Optionally add a numeric field asking for the polling interval
-        # Right now this is hard-coded to 60 seconds in sensor.py.
+        # Right now this is hard-coded to 300 seconds (5 minutes) in sensor.py.
 
         return self.async_show_form(
             step_id="user",
-            data_schema=vol.Schema({ vol.Required(CONF_URL, default = "https://labs.waterdata.usgs.gov/sta/v1.1/"): str, }),
+            data_schema=vol.Schema({
+                vol.Required(CONF_URL): str,
+            }),
             errors=errors
         )
 
 
     async def _async_get_info(self, url):
         """Checks that the SensorThings endpoint implements required data and conformance classes"""
-
-        # http://www.opengis.net/spec/iot_sensing/1.1/req/datamodel
-        # http://www.opengis.net/spec/iot_sensing/1.1/req/request-data
 
         resp = await session.get(url)
 
@@ -87,7 +86,6 @@ class SensorThingsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return {'error': 'not_conforming'}
         if not any(x['name'] == 'Things' for x in values):
             return {'error': 'not_conforming'}
-
 
 
         # TODO: Return conformance classes (and save them in the config entry)

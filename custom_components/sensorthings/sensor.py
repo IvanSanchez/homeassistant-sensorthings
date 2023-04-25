@@ -10,12 +10,8 @@ from homeassistant.core import (
     HomeAssistant,
     callback
 )
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
-from homeassistant.helpers.entity import EntityCategory
 
 from .const import DOMAIN
-# from .coordinator import DGTInfoCarCoordinator
 
 import traceback
 
@@ -24,13 +20,12 @@ import aiohttp
 
 from datetime import timedelta
 
-SCAN_INTERVAL = timedelta(seconds=60)
-
+SCAN_INTERVAL = timedelta(seconds=300)
 
 session = aiohttp.ClientSession()
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
-    """Add cameras for passed config_entry."""
+    """Add sensors available in the endpoint defined by the config entry."""
 
     url = config_entry.data['url']
 
@@ -41,15 +36,12 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
     datastreams_url = [i['url'] for i in values if i['name']=='Datastreams'][0]
 
-    # print(f"Datastreams url: {datastreams_url}")
-
     # Fetch available DataStreams
     # Ask the Thing for each datastream to be expanded, in order to build the
     # HASS DeviceInfo structure easier
-    # FIXME: Right now this only requests the first 10 datastreams to ease debugging
     # TODO: URL handling should be more robust, request parameter(s) should be
     # added via https://docs.python.org/3/library/urllib.parse.html
-    resp = await session.get(f"{datastreams_url}?$top=10&$expand=Thing")
+    resp = await session.get(f"{datastreams_url}?$expand=Thing")
     json = await resp.json()
 
     sensors = []
@@ -78,12 +70,20 @@ class OGCSTSensor(SensorEntity):
             name=datastream['Thing']['name']
         )
         self._attr_unique_id = datastream['@iot.id']
+        self._attr_extra_state_attributes = datastream['properties']
+
 
         # Instance attributes built into SensorEntity:
-        # self._attr_state_class = state_class
-        # self._attr_native_value = None
-        self._attr_native_unit_of_measurement = datastream['unitOfMeasurement']['symbol']
 
+        # NOTE: All OGCST Observations are treated as HASS measurements (i.e.
+        # not as HASS totals), regardless of their OGCST observationType
+        # (count, measurement, observation, etc)
+        self._attr_state_class = SensorStateClass.MEASUREMENT
+
+        # NOTE: Ideally, the 'unitOfMeasurement/definition' field would allow to
+        # set the sensor's _attr_device_class, at least to some degree. But
+        # values of this field in the wild are proving useless.
+        self._attr_native_unit_of_measurement = datastream['unitOfMeasurement']['symbol']
 
         self.last_observation_url = f"{datastream['Observations@iot.navigationLink']}?$top=1&$orderby=phenomenonTime desc"
 
@@ -92,13 +92,13 @@ class OGCSTSensor(SensorEntity):
 
     async def async_update(self):
         """Requests the last observation"""
-        print("Polling", self.name)
+        # print("Polling", self.name)
 
         # Note this is automatically called by HASS every SCAN_INTERVAL.
         resp = await session.get(self.last_observation_url)
         json = await resp.json()
 
-        print(self.name, json)
+        # print(self.name, json)
 
         if len(json['value']) == 0:
             return None
