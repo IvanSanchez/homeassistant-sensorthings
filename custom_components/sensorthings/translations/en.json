@@ -1,0 +1,18 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+        },
+        "error": {
+            "not_conforming": "Endpoint is wrong (check the URL), or doesn't implement necessary conformances",
+            "unknown": "[%key:common::config_flow::error::unknown%]"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "url": "SensorThings endpoint URL"
+                }
+            }
+        }
+    }
+}
