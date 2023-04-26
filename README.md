@@ -2,7 +2,6 @@
 
 `homeassistant-sensorthings` is a **prototype** [Home Assistant](https://www.home-assistant.io) integration for [OGC SensorThings](https://ogcapi.ogc.org/sensorthings/) services.
 
-
 ## Installation
 
 #### Guided installation
@@ -27,7 +26,11 @@ Restart Home Assistant to ensure the integration can be detected.
 
 Use the Home Assistant GUI to add a new integration (settings → devices & services → add new integration). You should find the OGC SensorThings integration in the list.
 
-Configuration only requires the base URL of the OGC SensorThings endpoint (including its version). e.g. `https://ogc-demo.k8s.ilt-dmz.iosb.fraunhofer.de/v1.1`
+Configuration only requires the base URL of the OGC SensorThings endpoint (including its version). e.g. `https://ogc-demo.k8s.ilt-dmz.iosb.fraunhofer.de/v1.1` or `https://sensors.bgs.ac.uk/FROST-Server/v1.1`.
+
+## OGC compliance
+
+Even though this integration implements a OGC SensorThings client, and has been tested with several SensorThings endpoints, it has **not** undergone any OGC compliance tests.
 
 
 ## License
