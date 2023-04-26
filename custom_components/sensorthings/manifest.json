@@ -9,5 +9,5 @@
   "iot_class": "cloud_poll",
   "issue_tracker": "https://gitlab.com/IvanSanchez/homeassistant-sensorthings/-/issues",
   "requirements": [],
-  "version": "0.1.0"
+  "version": "0.2.0"
 }

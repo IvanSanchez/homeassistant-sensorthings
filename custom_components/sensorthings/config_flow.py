@@ -41,6 +41,7 @@ class SensorThingsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
                 return self.async_create_entry(title=url, data={
                     "url": url,
+                    "version": info['version']
                 })
 
             except Exception:  # pylint: disable=broad-except
@@ -73,20 +74,28 @@ class SensorThingsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         values = json['value']
 
-        conformances = json['serverSettings']['conformance']
+        if 'serverSettings' in json:
+            conformances = json['serverSettings']['conformance']
 
-        if not 'http://www.opengis.net/spec/iot_sensing/1.1/req/datamodel' in conformances:
-            return {'error': 'not_conforming'}
-        if not 'http://www.opengis.net/spec/iot_sensing/1.1/req/request-data' in conformances:
-            return {'error': 'not_conforming'}
+            if not 'http://www.opengis.net/spec/iot_sensing/1.1/req/datamodel' in conformances:
+                return {'error': 'not_conforming'}
+            if not 'http://www.opengis.net/spec/iot_sensing/1.1/req/request-data' in conformances:
+                return {'error': 'not_conforming'}
+            version = "1.1"
+        else:
+            version = "1.0"
 
+        # This integration depends on OGC-ST Datastreams, Things and Observations,
+        # so they must exist in the endpoint
         if not any(x['name'] == 'Datastreams' for x in values):
             return {'error': 'not_conforming'}
         if not any(x['name'] == 'Things' for x in values):
+            return {'error': 'not_conforming'}
+        if not any(x['name'] == 'Observations' for x in values):
             return {'error': 'not_conforming'}
 
 
         # TODO: Return conformance classes (and save them in the config entry)
         # In particular, store whether the endpoint sends updates via MQTT.
-        return {'url': url}
+        return {'url': url, 'version': version}
 

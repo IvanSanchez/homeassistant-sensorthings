@@ -9,7 +9,7 @@
 - Enable the [HACS](https://hacs.xyz/) integration in your Home Assistant instance.
 - Use the side menu to browse HACS.
 - Navigate to "Integrations", then use the overflow menu (three dots at the top-right) to add a Custom Repository.
-- Enter the URL `https://github.com/IvanSanchez/homeassistant-sensorthingss`, of type "Integration"
+- Enter the URL `https://github.com/IvanSanchez/homeassistant-sensorthings`, of type "Integration"
 - You should see a new box labelled "OGC Sensorthings". Click on it and follow HACS' instructions to download and enable the integration.
 - Restart Home Assistant when HACS tells you to.
 
@@ -32,6 +32,7 @@ Configuration only requires the base URL of the OGC SensorThings endpoint (inclu
 
 Even though this integration implements a OGC SensorThings client, and has been tested with several SensorThings endpoints, it has **not** undergone any OGC compliance tests.
 
+This integration implements only part 1 of the standard (Sensing), and not part 2 (Tasking). It works for endpoints implementing either [1.0 part 1](http://www.opengis.net/doc/is/sensorthings/1.0) or [1.1 part 1]((http://www.opengis.net/doc/is/sensorthings/1.1).
 
 ## License
 
