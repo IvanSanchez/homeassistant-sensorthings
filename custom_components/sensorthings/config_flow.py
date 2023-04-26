@@ -75,8 +75,6 @@ class SensorThingsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         conformances = json['serverSettings']['conformance']
 
-        print (values, conformances);
-
         if not 'http://www.opengis.net/spec/iot_sensing/1.1/req/datamodel' in conformances:
             return {'error': 'not_conforming'}
         if not 'http://www.opengis.net/spec/iot_sensing/1.1/req/request-data' in conformances:
