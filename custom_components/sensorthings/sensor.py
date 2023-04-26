@@ -47,8 +47,6 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     sensors = []
 
     for datastream in json['value']:
-        # print (datastream)
-
         sensors.append(
             OGCSTSensor(datastream)
         )
@@ -70,7 +68,9 @@ class OGCSTSensor(SensorEntity):
             name=datastream['Thing']['name']
         )
         self._attr_unique_id = datastream['@iot.id']
-        self._attr_extra_state_attributes = datastream['properties']
+        self._attr_extra_state_attributes = ("properties" in datastream and
+                                            datastream['properties'] or
+                                            None)
 
 
         # Instance attributes built into SensorEntity:
@@ -87,8 +87,6 @@ class OGCSTSensor(SensorEntity):
 
         self.last_observation_url = f"{datastream['Observations@iot.navigationLink']}?$top=1&$orderby=phenomenonTime desc"
 
-        # TODO: Store other datastream data into the `extra_state_attributes`
-        # property of this class.
 
     async def async_update(self):
         """Requests the last observation"""
