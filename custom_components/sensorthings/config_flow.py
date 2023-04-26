@@ -1,7 +1,6 @@
 from homeassistant import config_entries
 from .const import DOMAIN
 from homeassistant.const import (CONF_URL)
-from homeassistant.components import zeroconf
 import voluptuous as vol
 import logging
 from typing import Any, Final

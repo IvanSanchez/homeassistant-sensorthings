@@ -6,8 +6,8 @@
   "dependencies": [],
   "documentation": "https://gitlab.com/IvanSanchez/homeassistant-sensorthings",
   "integration_type": "hub",
-  "iot_class": "cloud_poll",
+  "iot_class": "cloud_polling",
   "issue_tracker": "https://gitlab.com/IvanSanchez/homeassistant-sensorthings/-/issues",
   "requirements": [],
-  "version": "0.2.0"
+  "version": "0.3.0"
 }
